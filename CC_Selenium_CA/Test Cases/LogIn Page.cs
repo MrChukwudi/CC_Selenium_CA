@@ -22,62 +22,7 @@ namespace Selenium_CC_CA.Initialisers
                 ClickElement(By.CssSelector("div.alert.alert-secondary.text-center.cookiealert.show > button"));
             }
 
-
-            //
-            // 1. check non existing user
-            //
-            Console.WriteLine("Login Tests:");
             string subTest = "Test non existing credentials";
-            bool success = false;
-            TryFirstLogin("test@test.com", "pass");
-
-            WaitForElement(By.Id("toast-container"), false);
-            if (IsElementPresent(By.XPath("//*[contains(text(),'User does not exist in Crises Control')]"), true))
-            {
-                Log.Entry(Log.Pass, subTest, "Error message shown");
-                Console.WriteLine("Test: " + subTest + " | Result: PASS " + " | Outcome: Error message shown");
-                success = true;
-            }
-
-            if (driver.Url != Constants.BaseUrl + PagePath)
-            {
-                if (ClickElement(By.ClassName("glyphicon-off")))
-                {
-                    Log.Entry(Log.Fail, subTest, "Logged in");
-                    Console.WriteLine("Test: " + subTest + " | Result: Fail " + " | Outcome: Logged In");
-                }
-                else
-                {
-                    Log.Entry(Log.Fail, subTest, "Redirection to " + driver.Url);
-                    CheckUrl(Constants.BaseUrl + PagePath);
-                }
-            }
-            else
-            {
-                if (!success)
-                {
-                    Log.Entry(Log.Fail, subTest, "No error shown");
-                    Console.WriteLine("Test: " + subTest + " | Result: FAIL" + " | No error shown."); 
-                }
-            }
-
-            //
-            // 2. Check input validation (non conform email address)
-            //
-
-            subTest = "Check invalid email address";
-            TryFirstLogin("testtest.com", "pass");
-
-            if (!IsElementDisplayed(By.Id("Primary_Email-error"),true) /*Displayed.XPath(driver, "//div[contains(@class,'tooltip fade top in')]")*/)
-            {
-                Log.Entry(Log.Fail, subTest, "Error Message not shown");
-                Console.WriteLine("Test: " + subTest + " | Result: Fail " + " | Outcome: Error Message not shown.");
-            }
-            else
-            {
-                Log.Entry(Log.Pass, subTest, "Error Message Shown");
-                Console.WriteLine("Test: " + subTest + " | Result: PASS " + " | Outcome: Error Message Shown.");
-            }
 
             //
             // 3. Check actual login - User being used for the testing 
@@ -88,8 +33,8 @@ namespace Selenium_CC_CA.Initialisers
             {
                 if (Constants.IsDebug) // I don't want to enter my email and password every time I run this code...
                 {
-                    Constants.email = "juan-pierre.roussow@transputec.com";
-                    Constants.password = "Welcome$123";
+                    Constants.email = Constants.seleniumUserEmail;
+                    Constants.password = Constants.seleniumPwd;
                 }
                 // get the user login details.
                 else
@@ -168,20 +113,6 @@ namespace Selenium_CC_CA.Initialisers
         }
 
         /// <summary>
-        /// Inputs email ID and checks if there is an error - email does not exist 
-        /// </summary>
-        /// <param name="email"></param>
-        /// <param name="password"></param>
-        public static void TryFirstLogin(string email, string password)
-        {
-            //WriteInElement(By.Id("CustomerId"), companyID); //Company ID no longer required 
-            WriteInElement(By.Id("Primary_Email"), email);
-
-            //Adding section after inserting the email
-            ClickElement(By.Id("btn_login_next"));
-        }
-
-        /// <summary>
         /// Inputs user id, password and clicks login.
         /// </summary>
         /// <param name="email"></param>
@@ -205,39 +136,6 @@ namespace Selenium_CC_CA.Initialisers
 
             ClickElement(By.Name("btn_reg_submit"));
 
-        }
-
-        public static string[] Password_Reset()
-        {
-            CheckUrl(BaseUrl + "/dashboard");
-
-            ClickElement(By.Id("user-options"));
-            ClickElement(By.XPath("//*[contains(text(),'Logout')]"));
-            WaitForElement(By.Id("btn_forgot_pass"), true);
-
-            ClickElement(By.Id("btn_forgot_pass"));
-
-
-            while (FindAlert()[0] != Constants.SuccessMsg[0])
-            {
-                if (FindAlert()[0] == Constants.ErrorMsg[0])
-                {
-                    Console.WriteLine("Incorrect captcha code entered!.");
-                    Console.WriteLine("");
-
-                    ClickElement(By.XPath("//button[contains(@class,'confirm')]"));
-                }
-
-                WriteInElement(By.XPath("//*[@id='Email']"), email);
-
-                Console.WriteLine("Type the captcha characters in the picture here.");
-                string Captcha = Console.ReadLine();
-                WriteInElement(By.Id("Captcha"), Captcha);
-
-                ClickElement(By.XPath("//*[@id='btn_continue']"));
-            }
-
-            return SuccessMsg;
         }
     }
 }

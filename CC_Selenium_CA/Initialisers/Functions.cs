@@ -148,6 +148,39 @@ namespace Selenium_CC_CA.Initialisers
         }
 
         /// <summary>
+        /// Secondary Check URL - Use for multi login test cases
+        /// </summary>
+        /// <param name="url"></param>
+        public static void CPCheckUrl(String url)
+        {
+            int i = 0;
+            do
+            {
+                try
+                {
+                    if (Constants.driver.Url != url)
+                    {
+                        Constants.driver.Navigate().GoToUrl(url);
+                        ShortWait();
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    Screenshot(url);
+                    System.Diagnostics.Debug.WriteLine(e.Message.ToString());
+                }
+                i++;
+            }
+            while (Constants.driver.Url != url && i <= Constants.Loop);
+        }
+
+        public static void Refresh()
+        {
+            Constants.driver.Navigate().Refresh();
+        }
+
+        /// <summary>
         /// Write text in the element.
         /// </summary>
         /// <param name="selector"></param>
@@ -359,10 +392,12 @@ namespace Selenium_CC_CA.Initialisers
                 result[0].Equals(Constants.NotFound[0], StringComparison.OrdinalIgnoreCase) || result[0].Equals(Constants.Alert[0], StringComparison.OrdinalIgnoreCase))
             {
                 Log.Entry(Log.Fail, testName, result[1]);
+                Console.WriteLine("Test: " + testName + " | Result: FAIL " + " | Outcome: " + result[1]);
             }
             else
             {
                 Log.Entry(Log.Pass, testName, result[1]);
+                Console.WriteLine("Test: " + testName + " | Result: PASS " + " | Outcome: " + result[1]);
             }
         }
 

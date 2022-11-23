@@ -75,5 +75,23 @@ namespace Selenium_CC_CA.Initialisers
 
         public const string SOSname = "DEV - SOS Request";
         public const string SOSAlertUpdate = "This Is A Test";
+
+        // Selenium User Details
+        internal const string seleniumFN = "Selenium ";
+        internal const string seleniumLN = "User";
+        internal const string seleniumUserEmail = "seleniumuser@crises-control.com";
+        internal const string seleniumPwd = "@ut0_Ping-User";
+
+        // Selenium User Details 
+        internal static string PingGroup = "Selenium Gpr.";
+        internal static string PingLocation = "Selenium Loc.";
+        internal static string PingDepartment = "Selenium Dept.";
+
+        // Ping Config Message
+        internal static string PingMessage = "Transputec's Automated Ping.";
+
+        // Login URL
+        public const string LoginPage = "/users/login";
+
     }
 }

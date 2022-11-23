@@ -1,34 +1,32 @@
 ﻿using OpenQA.Selenium;
+using Selenium_CC_CA.Initialisers;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Selenium_CC_CA.Initialisers
+namespace CC_Selenium_CA.Test_Cases
 {
-    public class Ping : Constants
+    class Ping_Auto : Constants
     {
         private static readonly string NewPingPath = "/ping/newping";
         private static readonly string ViewPingPath = "/ping/view";
 
-        public static List<LogItem> Create()
+        public static void Create()
         {
-            string testName = "Ping - create";
-            Console.WriteLine(testName);
-            Log.Clear();
-
             SetUpPing();
 
             ClickElement(By.Id("btn_submit"));
+            //WaitForElement(By.ClassName("sa-button-container"), true);
 
-            LogAlert(testName);
-            return Log.GetLog();
-
+            LogAlert("Ping - create");
         }
 
-        public static List<LogItem> Acknowledge()
+        public static void Acknowledge()
         {
             bool success = false;
             string testName = "Ping - acknowledgement";
-            Console.WriteLine(testName);
 
             // go to the ping page
             CheckUrl(Constants.BaseUrl + ViewPingPath);
@@ -104,8 +102,8 @@ namespace Selenium_CC_CA.Initialisers
             {
                 Log.Entry(Log.Fail, testName, "acknowledgement failed");
             }
-            return Log.GetLog();
         }
+
 
         private static IWebElement GetMatchingPing()
         {
