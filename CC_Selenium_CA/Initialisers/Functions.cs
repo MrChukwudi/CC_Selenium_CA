@@ -893,6 +893,10 @@ namespace Selenium_CC_CA.Initialisers
         {
             Constants.UseSso = false;
         }
+        public static void LoopEnabeld()
+        {
+            Constants.LoopEnabeld = false;
+        }
     }
 
     public static class Extensions

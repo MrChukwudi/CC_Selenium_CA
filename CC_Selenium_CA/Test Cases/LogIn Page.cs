@@ -25,7 +25,7 @@ namespace Selenium_CC_CA.Initialisers
             string subTest = "Test non existing credentials";
 
             //
-            // 3. Check actual login - User being used for the testing 
+            // Actual login
             //
 
             subTest = "Valid User Login Test";
@@ -96,18 +96,6 @@ namespace Selenium_CC_CA.Initialisers
             // log successful login.
             Log.Entry(Log.Pass, LogInDesc, "User logged in");
             Console.WriteLine("Test: " + subTest + " | Result: PASS " + " | Outcome: User logged in.");
-
-            if (!Constants.IsDebug)
-            {
-                // offer the possibility to enter a secondary user for use throughout the tests.
-                Console.WriteLine("\n\nPress F1 to edit the secondary user. This user will not be modified.\nPress any other key to continue. ");
-                if (Console.ReadKey().Key == ConsoleKey.F1)
-                {
-                    Console.WriteLine("\n\nEnter the full name of the secondary user: ");
-                    Constants.UserNumber2 = Console.ReadLine();
-                }
-                Console.WriteLine("\n\n");
-            }
 
             return Log.GetLog();
         }

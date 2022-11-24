@@ -58,11 +58,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Test Cases\BrowserSelection.cs" />
-    <Compile Include="Test Cases\Global Config.cs" />
     <Compile Include="Test Cases\LogIn Page.cs" />
-    <Compile Include="Test Cases\Ping Auto.cs" />
-    <Compile Include="Test Cases\Ping Functions.cs" />
-    <Compile Include="Test Cases\Ping Portal.cs" />
     <Compile Include="Test Cases\Ping.cs" />
     <Compile Include="Test Cases\Response Options.cs" />
   </ItemGroup>

@@ -14,31 +14,13 @@ namespace Selenium_CC_CA.Initialisers
             ChromeOptions options = new ChromeOptions();
             options.AddExcludedArgument("excludeSwitches, ['enable-logging']");
             options.AddArguments("--disable-notifications"); // disable notification popups
+            options.AddArguments("--headless", "--window - size = 1920, 1200"); // tries to launch chrome in headless mode // prev before -- 
+            options.AddArguments("disable - gpu");
             ChromeDriverService service = ChromeDriverService.CreateDefaultService();
             service.HideCommandPromptWindow = true;
             return new ChromeDriver(service, options);
         }
 
-        internal static InternetExplorerDriver GetIEDriver()
-        {
-            InternetExplorerDriverService service = InternetExplorerDriverService.CreateDefaultService();
-            service.HideCommandPromptWindow = true;
-            return new InternetExplorerDriver(service);
-        }
-
-        internal static FirefoxDriver GetFireFoxDriver()
-        {
-            FirefoxOptions options = new FirefoxOptions();
-            options.SetPreference("geo.enabled", false);
-            options.SetPreference("geo.provider.use_corelocation", false);
-            options.SetPreference("geo.prompt.testing", false);
-            options.SetPreference("geo.prompt.testing.allow", false);
-            options.SetPreference("dom.webnotifications.enabled", false); // TODO Test this.
-            //options.AddArgument("-headless");
-            FirefoxDriverService service = FirefoxDriverService.CreateDefaultService();
-            service.HideCommandPromptWindow = true;
-            return new FirefoxDriver(service, options);
-        }
     }
 }
 

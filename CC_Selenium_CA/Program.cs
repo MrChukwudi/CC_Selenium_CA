@@ -1,4 +1,4 @@
-﻿using CC_Selenium_CA.Test_Cases;
+﻿//using CC_Selenium_CA.Test_Cases;
 using Selenium_CC_CA.Initialisers;
 using System;
 using System.IO;
@@ -16,6 +16,7 @@ namespace Selenium_CC_CA
         public static void Main(string[] args)
         {
             Functions.SetDebug(); // if in debug mode, set debug flag.
+            Functions.LoopEnabeld();
 
             Directory.CreateDirectory(New_Directory_Path);
 
@@ -25,37 +26,53 @@ namespace Selenium_CC_CA
 
             if (Constants.driver != null)
             {
-                Feedback(DateTime.Now, Ping_Portal.EEC(), "EEC - Send & Acknowledge Ping");
-
-                //Feedback(DateTime.Now, LogIn_Page.LogIn(), "Login");                            
-                /*
+                
                 Constants.BaseUrl = Constants.LiveUrl;
-                Feedback(DateTime.Now, Ping.Create(), "Create Ping");
-                Feedback(DateTime.Now, Ping.Acknowledge(), "Acknowledge Ping");
+                Feedback(DateTime.Now, LogIn_Page.LogIn(), "EEC - Login");
+                Feedback(DateTime.Now, Ping.Create(), "EEC - Create Ping");
+                Feedback(DateTime.Now, Ping.Acknowledge(), "EEC - Acknowledge Ping");
 
                 Constants.BaseUrl = Constants.MeaUrl;
-                Feedback(DateTime.Now, Ping.Create(), "Create Ping");
-                Feedback(DateTime.Now, Ping.Acknowledge(), "Acknowledge Ping");
-
-                Constants.BaseUrl = Constants.KsaUrl;
-                Feedback(DateTime.Now, Ping.Create(), "Create Ping");
-                Feedback(DateTime.Now, Ping.Acknowledge(), "Acknowledge Ping");
+                Feedback(DateTime.Now, LogIn_Page.LogIn(), "OMN - Login");
+                Feedback(DateTime.Now, Ping.Create(), "EEC - Create Ping");
+                Feedback(DateTime.Now, Ping.Acknowledge(), "EEC - Acknowledge Ping");
 
                 Constants.BaseUrl = Constants.UaeUrl;
-                Feedback(DateTime.Now, Ping.Create(), "Create Ping");
-                Feedback(DateTime.Now, Ping.Acknowledge(), "Acknowledge Ping");
-                */
-                //Feedback(DateTime.Now, SOS.Tracking_Data(), "SOS Tracking Data");
-                //Feedback(DateTime.Now, SOS.Incident_Details(), "SOS Incident Details");
-                //Feedback(DateTime.Now, SOS.Case_Notes(), "SOS Case Notes");
-                //Feedback(DateTime.Now, SOS.Print(), "SOS Print");
-                //Feedback(DateTime.Now, SOS.Close_SOS(), "Close SOS");
+                Feedback(DateTime.Now, LogIn_Page.LogIn(), "UAE - Login");
+                Feedback(DateTime.Now, Ping.Create(), "UAE - Create Ping");
+                Feedback(DateTime.Now, Ping.Acknowledge(), "UAE - Acknowledge Ping");
 
-                // DO NOT UNCOMMENT THE NEXT FOUR LINES WITHOUT SUBSTENTIAL CODE CHANGE
-                //Feedback(DateTime.Now, Report.Data_Export(), "Data Export"); // not possible at the moment due to file download/upload
-                //Feedback(DateTime.Now, User.Import(), "Import User"); // not possible at the moment due to file download/upload
-                //Feedback(DateTime.Now, User.DeleteImportedUser(), "Delete Imported User"); // not possible at the moment due to file download/upload
-                //Feedback(DateTime.Now, LogIn_Page.Password_Reset(), "Password Reset"); // this needs user input so not good right now
+                Constants.BaseUrl = Constants.KsaUrl;
+                Feedback(DateTime.Now, LogIn_Page.LogIn(), "KSA- Login");
+                Feedback(DateTime.Now, Ping.Create(), "KSA - Create Ping");
+                Feedback(DateTime.Now, Ping.Acknowledge(), "KSA - Acknowledge Ping");
+                               
+                if (LoopEnabeld == true)
+                {
+                    for (int i = 0; i <= loopcount; i++)
+                    {
+                        Console.WriteLine("Loop Number: " + i);
+                        Constants.BaseUrl = Constants.LiveUrl;
+                        Feedback(DateTime.Now, Ping.Create(), "EEC - Create Ping");
+                        Feedback(DateTime.Now, Ping.Acknowledge(), "EEC - Acknowledge Ping");
+
+                        Constants.BaseUrl = Constants.MeaUrl;
+                        Feedback(DateTime.Now, Ping.Create(), "MEA - Create Ping");
+                        Feedback(DateTime.Now, Ping.Acknowledge(), "MEA - Acknowledge Ping");
+
+                        Constants.BaseUrl = Constants.UaeUrl;
+                        Feedback(DateTime.Now, Ping.Create(), "UAE - Create Ping");
+                        Feedback(DateTime.Now, Ping.Acknowledge(), "UAE - Acknowledge Ping");
+
+                        Constants.BaseUrl = Constants.KsaUrl;
+                        Feedback(DateTime.Now, Ping.Create(), "KSA - Create Ping");
+                        Feedback(DateTime.Now, Ping.Acknowledge(), "KSA - Acknowledge Ping");
+                    }
+                }
+                else
+                {
+                    // do nothing 
+                }
 
                 LogFile.Add("");
                 LogFile.Add("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");

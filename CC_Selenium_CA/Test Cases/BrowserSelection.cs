@@ -21,7 +21,7 @@ namespace Selenium_CC_CA.Initialisers
 
             string[] message = { "Test launched using ", "" };
             Console.WriteLine("CC - Selenium:");
-            Console.Write("\n\t1 - Chrome\n\t2 - Edge\n\t3 - Firefox \n\t4 - Internet Explorer\n\nPlease select the browser you want to use: ");
+            //Console.Write("\n\t1 - Chrome\n\t2 - Edge\n\t3 - Firefox \n\t4 - Internet Explorer\n\nPlease select the browser you want to use: ");
             if (Constants.IsDebug == true)
             {
                 ChromeOptions options = new ChromeOptions();
@@ -48,18 +48,6 @@ namespace Selenium_CC_CA.Initialisers
                             service.HideCommandPromptWindow = true;
                             webDriver = new ChromeDriver(service, options);
                             //message[0] += "Chrome ";
-                            break;
-                        case 2:
-                            webDriver = new EdgeDriver();
-                            //message[0] += "Edge ";
-                            break;
-                        case 3:
-                            webDriver = new FirefoxDriver();
-                            //message[0] += "Firefox ";
-                            break;
-                        case 4:
-                            webDriver = new InternetExplorerDriver();
-                            //message[0] += "Internet Explorer ";
                             break;
                     }
                 }
@@ -93,18 +81,20 @@ namespace Selenium_CC_CA.Initialisers
 
             if (webDriver != null)
             {
-                // select the portal url to use as base URL
-                Console.WriteLine("\n\n\t1 - Dev portal ({0})\n\t2 - PP portal ({1})\n\t3 - Live Portal ({2})\n\t4 - G-Cloud Portal ({3})\n\t5 - KSA portal ({4})\n\t6 - MEA Portal ({5})\n\t7 - UAE Portal ({6})",
-                    Constants.DevUrl, Constants.PpUrl, Constants.LiveUrl, Constants.GUrl, Constants.KsaUrl, Constants.MeaUrl, Constants.UaeUrl);
-                Console.Write("\nPlease select the portal you want to test: ");
+
 
                 if (Constants.IsDebug == true)
                 {
-                    Console.WriteLine("6");
-                    Constants.BaseUrl = Constants.MeaUrl;
+                    //Console.WriteLine("6");
+                    Constants.BaseUrl = Constants.LiveUrl;
                 }
                 else
                 {
+                    // select the portal url to use as base URL
+                    Console.WriteLine("\n\n\t1 - Dev portal ({0})\n\t2 - PP portal ({1})\n\t3 - Live Portal ({2})\n\t4 - G-Cloud Portal ({3})\n\t5 - KSA portal ({4})\n\t6 - MEA Portal ({5})\n\t7 - UAE Portal ({6})",
+                    Constants.DevUrl, Constants.PpUrl, Constants.LiveUrl, Constants.GUrl, Constants.KsaUrl, Constants.MeaUrl, Constants.UaeUrl);
+                    Console.Write("\nPlease select the portal you want to test: ");
+
                     if (int.TryParse(Console.ReadLine(), out choice))
                     {
                         switch (choice)
@@ -145,12 +135,7 @@ namespace Selenium_CC_CA.Initialisers
                 //if (strBrowserVersion == "")
                 string strBrowserVersion = capabilities.GetCapability("browserVersion")?.ToString() ?? "";
 
-                //string osVersion = System.Environment.OSVersion.VersionString;
-
                 string subKey = @"SOFTWARE\Wow6432Node\Microsoft\Windows NT\CurrentVersion";
-                //Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.LocalMachine;
-                //Microsoft.Win32.RegistryKey skey = key.OpenSubKey(subKey);
-                //string osName = skey.GetValue("ProductName").ToString();
                 string osBuild = Environment.OSVersion.Version.Build.ToString();
 
                 //return name != null ? name.ToString() : "Unknown";

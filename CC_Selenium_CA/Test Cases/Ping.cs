@@ -26,6 +26,7 @@ namespace Selenium_CC_CA.Initialisers
 
         public static List<LogItem> Acknowledge()
         {
+            Log.Clear();
             bool success = false;
             string testName = "Ping - acknowledgement";
             Console.WriteLine(testName);
