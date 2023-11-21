@@ -5,6 +5,7 @@ using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.IE;
 using Selenium_CC_CA.Initialisers;
 using System;
+using System.Diagnostics;
 
 namespace Selenium_CC_CA.Initialisers
 {
@@ -20,13 +21,18 @@ namespace Selenium_CC_CA.Initialisers
             string error = string.Empty;
 
             string[] message = { "Test launched using ", "" };
-            Console.WriteLine("CC - Selenium:");
-            //Console.Write("\n\t1 - Chrome\n\t2 - Edge\n\t3 - Firefox \n\t4 - Internet Explorer\n\nPlease select the browser you want to use: ");
+            Console.WriteLine("Selenium Cascading Ping Browser Setup");
+
             if (Constants.IsDebug == true)
             {
                 ChromeOptions options = new ChromeOptions();
                 options.AddExcludedArgument("excludeSwitches, ['enable-logging']"); // used to remove the blue
                 options.AddArguments("--disable-notifications"); // disable notification popups
+                if (Constants.HeadlessRun == true)
+                {
+                    options.AddArguments("--headless", "--window - size = 1920, 1200"); // tries to launch chrome in headless mode // prev before -- 
+                    options.AddArguments("disable - gpu");
+                }
                 ChromeDriverService service = ChromeDriverService.CreateDefaultService();
                 service.HideCommandPromptWindow = true;
                 webDriver = new ChromeDriver(service, options);
@@ -34,7 +40,7 @@ namespace Selenium_CC_CA.Initialisers
             else if (int.TryParse(Console.ReadLine(), out choice))
             {
                 Console.WriteLine("\n");
-
+                Console.Write("\n\t1 - Chrome\n\nPlease select the browser you want to use: ");
                 try
                 {
                     switch (choice)
@@ -44,6 +50,8 @@ namespace Selenium_CC_CA.Initialisers
                             ChromeOptions options = new ChromeOptions();
                             options.AddExcludedArgument("excludeSwitches, ['enable-logging']"); // used to remove the blue
                             options.AddArguments("--disable-notifications"); // disable notification popups
+                            //options.AddArguments("--headless", "--window - size = 1920, 1200"); // tries to launch chrome in headless mode // prev before -- 
+                            //options.AddArguments("disable - gpu");
                             ChromeDriverService service = ChromeDriverService.CreateDefaultService();
                             service.HideCommandPromptWindow = true;
                             webDriver = new ChromeDriver(service, options);
@@ -135,12 +143,12 @@ namespace Selenium_CC_CA.Initialisers
                 //if (strBrowserVersion == "")
                 string strBrowserVersion = capabilities.GetCapability("browserVersion")?.ToString() ?? "";
 
-                string subKey = @"SOFTWARE\Wow6432Node\Microsoft\Windows NT\CurrentVersion";
                 string osBuild = Environment.OSVersion.Version.Build.ToString();
+                string osVersion = System.Environment.OSVersion.VersionString;
 
                 //return name != null ? name.ToString() : "Unknown";
                 message[0] += webDriver.GetType().Name.ToString().Replace("Driver", string.Empty) + " " + strBrowserVersion /* + strBrowserVersion*/;
-                //message[1] = "Running on " + osName + " (" + osVersion + ") Build " + osBuild;
+                message[1] = "Running on (" + osVersion + ") Build " + osBuild;
 
                 // set implicit wait to 10s.
                 webDriver.Manage().Timeouts().ImplicitWait = Constants.ImplicitWait;
@@ -149,9 +157,124 @@ namespace Selenium_CC_CA.Initialisers
             {
                 return new string[] { Constants.ErrorMsg[0], error };
             }
-
             logHeader();
+            return message;
+        }
 
+        public static string[] StartBrowser(out IWebDriver webDriver)
+        {
+            int choice;
+            string error = string.Empty;
+
+            string[] message = { "Test launched using ", "" };
+            Console.WriteLine("Selenium Cascading Ping Starting Browser");
+
+            if (Constants.IsDebug == true)
+            {
+                try
+                {
+
+                }
+                catch (Exception e)
+                {
+
+                }
+                ChromeOptions options = new ChromeOptions();
+                options.AddExcludedArgument("excludeSwitches, ['enable-logging']"); // used to remove the blue
+                options.AddArguments("--disable-notifications"); // disable notification popups
+                if (Constants.HeadlessRun == true)
+                {
+                    options.AddArguments("--headless", "--window - size = 1920, 1200"); // tries to launch chrome in headless mode // prev before -- 
+                    options.AddArguments("disable - gpu");
+                }
+                ChromeDriverService service = ChromeDriverService.CreateDefaultService();
+                service.HideCommandPromptWindow = true;
+                webDriver = new ChromeDriver(service, options);
+            }
+            else if (int.TryParse(Console.ReadLine(), out choice))
+            {
+                Console.WriteLine("\n");
+                Console.Write("\n\t1 - Chrome\n\nPlease select the browser you want to use: ");
+                try
+                {
+                    switch (choice)
+                    {
+                        case 1:
+                        default:
+                            ChromeOptions options = new ChromeOptions();
+                            options.AddExcludedArgument("excludeSwitches, ['enable-logging']"); // used to remove the blue
+                            options.AddArguments("--disable-notifications"); // disable notification popups
+                            //options.AddArguments("--headless", "--window - size = 1920, 1200"); // tries to launch chrome in headless mode // prev before -- 
+                            //options.AddArguments("disable - gpu");
+                            ChromeDriverService service = ChromeDriverService.CreateDefaultService();
+                            service.HideCommandPromptWindow = true;
+                            webDriver = new ChromeDriver(service, options);
+                            //message[0] += "Chrome ";
+                            break;
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Error launching the browser: {0}", e.Message);
+                    webDriver = null;
+                    error = e.Message;
+                }
+            }
+            else
+            {
+                Console.WriteLine("\n");
+                try
+                {
+                    ChromeOptions options = new ChromeOptions();
+                    options.AddExcludedArgument("excludeSwitches, ['enable-logging']"); // used to remove the blue
+                    options.AddArguments("--disable-notifications"); // disable notification popups
+                    ChromeDriverService service = ChromeDriverService.CreateDefaultService();
+                    service.HideCommandPromptWindow = true;
+                    webDriver = new ChromeDriver(service, options);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Error launching the browser: {0}", e.Message);
+                    webDriver = null;
+                    error = e.Message;
+                }
+            }
+
+
+            if (webDriver != null)
+            {
+
+
+                if (Constants.IsDebug == true)
+                {
+                    //Console.WriteLine("6");
+                    Constants.BaseUrl = Constants.LiveUrl;
+                }
+                else
+                {
+                    // Do Nothing
+                }
+
+                ICapabilities capabilities = ((ChromeDriver)webDriver).Capabilities;
+                //string strBrowserVersion = capabilities.Version.ToString();
+                //if (strBrowserVersion == "")
+                string strBrowserVersion = capabilities.GetCapability("browserVersion")?.ToString() ?? "";
+
+                string osBuild = Environment.OSVersion.Version.Build.ToString();
+                string osVersion = System.Environment.OSVersion.VersionString;
+
+                //return name != null ? name.ToString() : "Unknown";
+                message[0] += webDriver.GetType().Name.ToString().Replace("Driver", string.Empty) + " " + strBrowserVersion /* + strBrowserVersion*/;
+                message[1] = "Running on (" + osVersion + ") Build " + osBuild;
+
+                // set implicit wait to 10s.
+                webDriver.Manage().Timeouts().ImplicitWait = Constants.ImplicitWait;
+            }
+            else
+            {
+                return new string[] { Constants.ErrorMsg[0], error };
+            }
+            logHeader();
             return message;
         }
 
@@ -161,10 +284,22 @@ namespace Selenium_CC_CA.Initialisers
         private static void logHeader()
         {
             Functions.LogFile.Add("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" ); // + "\r\n"
-            Functions.LogFile.Add("Automated Test Started On " + DateTime.Now.ToLocalTime().ToString() );
+            Functions.LogFile.Add("Automated Test Started On " + DateTime.Now.ToLocalTime().ToString());
             Functions.LogFile.Add("URL : " + Constants.BaseUrl);
             //Functions.LogFile.Add("Computer : " + Environment.MachineName);
             Functions.LogFile.Add("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx \r\n");
+        }
+
+        // Kill Chrome Driver that is being used 
+        public static void CleanUp()
+        {
+            
+            Process[] chromeDriverProcesses = Process.GetProcessesByName("chromedriver");
+
+            foreach (var chromeDriverProcess in chromeDriverProcesses)
+            {
+                chromeDriverProcess.Kill();
+            }
         }
     }
 }

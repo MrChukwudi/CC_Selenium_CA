@@ -27,14 +27,28 @@ namespace Selenium_CC_CA.Initialisers
             CompleteLog.Add(newEntry);
         }
 
-        public static void Entry(string status, string test, string outcome)
+        internal static void Entry(string status, string test, string outcome)
         {
-            CompleteLog.Add(LogItem.New(status, test, outcome));
+            try
+            {
+                CompleteLog.Add(LogItem.New(status, test, outcome));
+            }
+            catch (Exception ex)
+            {
+                CompleteLog.Add(LogItem.New(status, test, $"{outcome} - {ex.Message}"));
+            }
         }
 
-        public static void CALog(string status, string test, string outcome)
+        internal static void ErrorEntry(string status, string test, string outcome)
         {
-            Console.WriteLine(status, test, outcome);
+            try
+            {
+                CompleteLog.Add(LogItem.New(status, test, outcome));
+            }
+            catch (Exception ex)
+            {
+                CompleteLog.Add(LogItem.New(status, test, $"{outcome} - {ex.Message}"));
+            }
         }
 
         /// <summary>
@@ -56,7 +70,7 @@ namespace Selenium_CC_CA.Initialisers
                 case 3:
                 default:
                     CompleteLog.Add(LogItem.New(newEntry[0], newEntry[1], newEntry[2]));
-                    break;
+                break;
             }
         }
 
@@ -69,6 +83,5 @@ namespace Selenium_CC_CA.Initialisers
         {
             CompleteLog.Clear();
         }
-
     }
 }

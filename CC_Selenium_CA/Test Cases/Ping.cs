@@ -11,8 +11,9 @@ namespace Selenium_CC_CA.Initialisers
 
         public static List<LogItem> Create()
         {
-            string testName = "Ping - create";
-            Console.WriteLine(testName);
+            string startName = "\nPing - Create";
+            string testName = "Ping - Create";
+            Console.WriteLine(startName);
             Log.Clear();
 
             SetUpPing();
@@ -28,8 +29,9 @@ namespace Selenium_CC_CA.Initialisers
         {
             Log.Clear();
             bool success = false;
-            string testName = "Ping - acknowledgement";
-            Console.WriteLine(testName);
+            string startName = "\nPing - Acknowledgement";
+            string testName = "Ping - Acknowledgement";
+            Console.WriteLine(startName);
 
             // go to the ping page
             CheckUrl(Constants.BaseUrl + ViewPingPath);
@@ -95,15 +97,21 @@ namespace Selenium_CC_CA.Initialisers
 
             // wait before continuing as it will otherwise cause a crash
             ShortWait();
-            ClickElement(By.XPath("//span[contains(@class,'cursorp fa-2x float-right text-white')]"));
+            ClickElement(By.XPath("//span[contains(@class,'cursorp fa-2x float-end text-white')]"));
             // return the message corresponding to the outcome.
             if (success)
             {
-                Log.Entry(Log.Pass, testName, "acknowledgement successful");
+                string outcome = "acknowledgement successful";
+                Log.Entry(Log.Pass, testName, outcome);
+                Console.WriteLine("Test: " + testName + " \t Result: PASS " + " \t Outcome: " + outcome + "\tURL: " + Constants.driver.Url);
+
             }
             else
             {
-                Log.Entry(Log.Fail, testName, "acknowledgement failed");
+                string outcome = "acknowledgement failed";
+                Log.Entry(Log.Fail, testName, outcome);
+                Console.WriteLine("Test: " + testName + " \t Result: FAIL " + " \t Outcome: " + outcome + "\tURL: " + Constants.driver.Url);
+
             }
             return Log.GetLog();
         }
@@ -147,19 +155,23 @@ namespace Selenium_CC_CA.Initialisers
             ClickElement(By.Id("Message"));
             WriteInElement(By.Id("Message"), Constants.PingMessage);
 
-            if (Constants.driver.GetType().Name.ToLower().Contains("firefox"))
+           if (Constants.driver.GetType().Name.ToLower().Contains("firefox"))
             {
-                ClickElement(By.XPath("//input[contains(@placeholder, 'Users')]"));
+                ClickElement(By.CssSelector("#usertonotifycnt > div.col-md-8 > span > span.selection > span > ul > li > input"));
             }
-            WriteInElement(By.XPath("//input[contains(@placeholder, 'User(s)')]"), Constants.UserNumber1);
-            ClickElement(By.XPath("//li[contains(@class,'select2-results__option select2-results__option--highlighted')]"));
+            WriteInElement(By.CssSelector("#usertonotifycnt > div.col-md-8 > span > span.selection > span > ul > li > input"), Constants.UserNumber1);
 
+            ClickElement(By.XPath("//li[contains(@class,'select2-results__option select2-results__option--highlighted')]"));
+           
             ClickElement(By.XPath("//li[contains(@title,'Text')]/span[contains(@class,'select2-selection__choice__remove')]"));
             if (Constants.driver.GetType().Name.ToLower().Contains("chrome") && IsElementDisplayed(By.XPath("//li[contains(@title,'Text')]/span[contains(@class,'select2-selection__choice__remove')]"), false))
             {
                 // On chrome, the first click does not always work so click twice.
                 ClickElement(By.XPath("//li[contains(@title,'Text')]/span[contains(@class,'select2-selection__choice__remove')]"));
             }
+
+            ClickElement(By.CssSelector(".slider-tick:nth-child(3)"));
+
             ClickElement(By.XPath("//li[contains(@title,'Phone')]/span[contains(@class,'select2-selection__choice__remove')]"));
         }
     }

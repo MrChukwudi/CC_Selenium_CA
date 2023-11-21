@@ -8,11 +8,13 @@ namespace Selenium_CC_CA.Initialisers
     {
         public const string PagePath = "/users/login";
         public const string LogInDesc = "Login";
+        public const string LogOutDesc = "Log Out";
         public static List<LogItem> LogIn()
         {
             Log.Clear();
             CheckUrl(Constants.BaseUrl + PagePath);
-
+            string testName = "Login Test";
+            Console.WriteLine(testName);
             //
             // Closing Cookies Pop-Up 
             //
@@ -22,13 +24,11 @@ namespace Selenium_CC_CA.Initialisers
                 ClickElement(By.CssSelector("div.alert.alert-secondary.text-center.cookiealert.show > button"));
             }
 
-            string subTest = "Test non existing credentials";
-
             //
             // Actual login
             //
 
-            subTest = "Valid User Login Test";
+            string subTest = "Valid User Login Test";
             while (Constants.driver.Url == Constants.BaseUrl + PagePath)
             {
                 if (Constants.IsDebug) // I don't want to enter my email and password every time I run this code...
@@ -80,12 +80,14 @@ namespace Selenium_CC_CA.Initialisers
                 {
                     // in that case, look somwhere else for the name.
                     userName = null;
-                    userName = driver.FindElement(By.CssSelector("a[role = 'button']"));
+
+                    userName = Constants.driver.FindElement(By.XPath("//*[@id='headerNavbarCollapse']/ul/li[1]/a")); // Lib portal doesn't have the role= btn thing 
                     if (userName != null)
                     {
                         // store the user name.
                         UserNumber1 = userName.Text.TrimStart().TrimEnd();
                     }
+               
                 }
                 // store the user name
                 else
@@ -95,7 +97,7 @@ namespace Selenium_CC_CA.Initialisers
             }
             // log successful login.
             Log.Entry(Log.Pass, LogInDesc, "User logged in");
-            Console.WriteLine("Test: " + subTest + " | Result: PASS " + " | Outcome: User logged in.");
+            Console.WriteLine("Test: " + subTest + " \t Result: PASS " + " \t Outcome: User logged in." + "\t URL: " + Constants.driver.Url);
 
             return Log.GetLog();
         }
@@ -124,6 +126,35 @@ namespace Selenium_CC_CA.Initialisers
 
             ClickElement(By.Name("btn_reg_submit"));
 
+        }
+
+        public static List<LogItem> LogOut()
+        {
+            Log.Clear();
+            string startName = "\nLog Out Test";
+            string testName = "Log Out Test";
+            Console.WriteLine(startName);
+
+            ShortWait();
+            WaitForElement(By.Id("offdutysts"), true);
+            ClickElement(By.XPath("//*[@id='headerNavbarCollapse']/ul/li[1]/a")); 
+
+            ShortWait();
+            WaitForElement(By.Id("dlgoffduty"), true);
+            ClickElement(By.XPath("//*[@id='headerNavbarCollapse']/ul/li[1]/div/a[5]")); 
+
+            if(driver.Url == Constants.BaseUrl + LoginPage)
+            {
+                Log.Entry(Log.Pass, LogOutDesc, "User logged out successfully.");
+                Console.WriteLine("Test: " + testName + " \t Result: PASS " + " \t Outcome: User logged out." + "\t URL: " + Constants.driver.Url + "\n");
+            }
+            else
+            {
+                Log.Entry(Log.Fail, LogOutDesc, "Failed to log out user.");
+                Console.WriteLine("Test: " + testName + " \t Result: FAIL " + " \t Outcome: Failed to log out user." + "\t URL: " + Constants.driver.Url + "\n");
+            }
+
+            return Log.GetLog();
         }
     }
 }

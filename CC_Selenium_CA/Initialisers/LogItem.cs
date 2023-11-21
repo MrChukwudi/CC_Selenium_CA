@@ -1,4 +1,6 @@
-﻿namespace Selenium_CC_CA.Initialisers
+﻿using System;
+
+namespace Selenium_CC_CA.Initialisers
 {
     public class LogItem
     {
@@ -20,7 +22,7 @@
 
         public string Print()
         {
-            return string.Format("Result = {0}\tSub-test: {1,30}\tOutcome: {2}", Status, Test, Outcome);
+            return string.Format("Result = {0}\nSub-test: {1}\nOutcome: {2}", Status, Test, Outcome); // ("Result = {0}\tSub-test: {1,30}\tOutcome: {2}", Status, Test, Outcome);
         }
 
         public string GetStatus()

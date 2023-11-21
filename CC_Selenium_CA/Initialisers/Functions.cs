@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Net.NetworkInformation;
+using OpenQA.Selenium.Chrome;
 
 namespace Selenium_CC_CA.Initialisers
 {
@@ -145,6 +147,7 @@ namespace Selenium_CC_CA.Initialisers
                 }
             }
             while (driver.Url != url);
+
         }
 
         /// <summary>
@@ -264,7 +267,8 @@ namespace Selenium_CC_CA.Initialisers
 
                 }
                 else
-                {
+
+                        {
                     // if the search box was not found, log it.
                     Log.Entry(Log.Error, string.Format("{0} not found on the page. Search could not proceed. Search term: {1}", searchBoxSelector.ToString(), searchString), string.Empty);
                 }
@@ -387,17 +391,24 @@ namespace Selenium_CC_CA.Initialisers
         /// <param name="testName"></param>
         internal static void LogAlert(string testName)
         {
-            string[] result = FindAlert();
-            if (string.IsNullOrWhiteSpace(result[1]) || result[0].Equals(Constants.ErrorMsg[0], StringComparison.OrdinalIgnoreCase) ||
-                result[0].Equals(Constants.NotFound[0], StringComparison.OrdinalIgnoreCase) || result[0].Equals(Constants.Alert[0], StringComparison.OrdinalIgnoreCase))
+            try // added in-case od exception (KSA / Sahara Net being slow)
             {
-                Log.Entry(Log.Fail, testName, result[1]);
-                Console.WriteLine("Test: " + testName + " | Result: FAIL " + " | Outcome: " + result[1]);
+                string[] result = FindAlert();
+                if (string.IsNullOrWhiteSpace(result[1]) || result[0].Equals(Constants.ErrorMsg[0], StringComparison.OrdinalIgnoreCase) ||
+                    result[0].Equals(Constants.NotFound[0], StringComparison.OrdinalIgnoreCase) || result[0].Equals(Constants.Alert[0], StringComparison.OrdinalIgnoreCase))
+                {
+                    Log.Entry(Log.Fail, testName, result[1]);
+                    Console.WriteLine("Test: " + testName + " \t Result: FAIL " + " \t Outcome: " + result[1] + "\t URL: " + Constants.driver.Url);
+                }
+                else
+                {
+                    Log.Entry(Log.Pass, testName, result[1]);
+                    Console.WriteLine("Test: " + testName + " \t Result: PASS " + " \t Outcome: " + result[1] + "\t URL: " + Constants.driver.Url);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                Log.Entry(Log.Pass, testName, result[1]);
-                Console.WriteLine("Test: " + testName + " | Result: PASS " + " | Outcome: " + result[1]);
+                Log.Entry(Log.Error, testName, $"{ex.Message}");
             }
         }
 
@@ -548,7 +559,7 @@ namespace Selenium_CC_CA.Initialisers
             Constants.LogFile.Add("");
             Constants.LogFile.Add(NameOfTheTestCase);
             Constants.LogFile.Add(normalBlock);
-            Constants.LogFile.Add("Started At " + StartingTime.ToString("H-mm-ss"));
+            Constants.LogFile.Add("Started At " + StartingTime.ToString());
             Constants.LogFile.Add("");
 
             foreach (var item in TestCase)
@@ -557,7 +568,7 @@ namespace Selenium_CC_CA.Initialisers
             }
 
             Constants.LogFile.Add("");
-            Constants.LogFile.Add("Finished At " + DateTime.Now.ToString("H-mm-ss"));
+            Constants.LogFile.Add("Finished At " + DateTime.Now.ToString());
             Constants.LogFile.Add("Duration : " + (DateTime.Now - StartingTime).ToString());
             Constants.LogFile.Add(normalBlock);
 
@@ -587,7 +598,7 @@ namespace Selenium_CC_CA.Initialisers
         {
             errorBlock = string.Empty;
             normalBlock = string.Empty;
-            for (int i = 0; i < 92; i++)
+            for (int i = 0; i < 100; i++)
             {
                 errorBlock += "*";
                 normalBlock += "-";
@@ -625,7 +636,24 @@ namespace Selenium_CC_CA.Initialisers
             Constants.LogFile.Add("");
             Constants.LogFile.Add(nameOfTheTestCase);
             Constants.LogFile.Add(normalBlock);
-            Constants.LogFile.Add("Started At " + startingTime.ToString("H-mm-ss"));
+            Constants.LogFile.Add("Started At " + startingTime.ToString()); 
+            if (Constants.BaseUrl == Constants.LiveUrl)
+            {
+                Constants.LogFile.Add("Data Centre: Azure");
+            }
+            if (Constants.BaseUrl == Constants.MeaUrl)
+            {
+                Constants.LogFile.Add("Data Centre: ODP");
+            }
+            if (Constants.BaseUrl == Constants.UaeUrl)
+            {
+                Constants.LogFile.Add("Data Centre: Azure (UAE)");
+            }
+            if (Constants.BaseUrl == Constants.KsaUrl)
+            {
+                Constants.LogFile.Add("Data Centre: OCI");
+            }
+
             Constants.LogFile.Add("");
 
             foreach (var item in testCase)
@@ -633,8 +661,9 @@ namespace Selenium_CC_CA.Initialisers
                 Constants.LogFile.Add(item.Print());
             }
 
+            Constants.LogFile.Add("Test URL: " + Constants.driver.Url);
             Constants.LogFile.Add("");
-            Constants.LogFile.Add("Finished At " + DateTime.Now.ToString("H-mm-ss"));
+            Constants.LogFile.Add("Finished At " + DateTime.Now.ToString()); 
             Constants.LogFile.Add("Duration : " + (DateTime.Now - startingTime).ToString());
             Constants.LogFile.Add(normalBlock);
 
@@ -893,9 +922,81 @@ namespace Selenium_CC_CA.Initialisers
         {
             Constants.UseSso = false;
         }
-        public static void LoopEnabeld()
+        public static void LoopEnabled()
         {
-            Constants.LoopEnabeld = false;
+            Constants.LoopEnabled = true;
+        }
+        public static void HeadlessRun()
+        {
+            Constants.HeadlessRun = false;
+        }
+        public static void testingRun()
+        {
+            Constants.testingRun = false;
+        }
+        public static void Region(string region)
+        {
+            Console.WriteLine("------------------");
+            Console.WriteLine(region);
+            Console.WriteLine("------------------");
+        }
+        
+        public static void Timer()
+        {
+            int hour = Constants.hour;
+            int min = Constants.minutes;
+
+            if (hour == 0 && min == 0)
+            {
+                //do nothing
+            }
+            else if(hour == 0)
+            {
+                Console.WriteLine("One minute start");
+                System.Threading.Thread.Sleep(1000 * 60 * min);
+                Console.WriteLine("One minute end");
+            }
+            else
+            {
+                if(min == 0)
+                {
+                    System.Threading.Thread.Sleep(1000 * 60 * 60 * hour);
+                }
+                else
+                {
+                    System.Threading.Thread.Sleep((1000 * 60 * 60 * hour) + (1000 * 60 * min));
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// Internet check 
+        /// Connects to CC website
+        /// If able to navigate there then continue to other testes 
+        /// If not then kill the app
+        /// </summary>
+        public static void IsConnectedToInternet()
+        {
+            bool result = false;
+            
+            try
+            {
+                driver.Navigate().GoToUrl("https://www.crises-control.com");
+                result = true;
+            }
+            catch { }
+            if (result == true)
+            {
+                Console.WriteLine("Internet Connection Established \n");
+            }
+            else
+            {
+                Console.WriteLine("Internet Not Connected");
+                System.Threading.Thread.Sleep(3000); // waits for a bit then kills the browser & app
+                driver.Quit(); // close browser
+                Environment.Exit(-1); // kills app 
+            }
         }
     }
 

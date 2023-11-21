@@ -26,12 +26,17 @@ namespace Selenium_CC_CA.Initialisers
         public static readonly TimeSpan WaitTime = TimeSpan.FromSeconds(8);
         public static readonly TimeSpan LongWait = TimeSpan.FromSeconds(30);
 
-        internal static bool LoopEnabeld;
+        internal static bool LoopEnabled;
         public const int Loop = 5;
         public const int loopcount = 1;
+        internal static bool HeadlessRun;
+        internal static bool testingRun;
         //public const int WhileLoop = 200;
 
+
+
         public static string UserNumber1 = "";
+        public static string LoggedCompanyID = "";
 
         public readonly static string[] SuccessMsg = { "Success" };
         public readonly static string[] ErrorMsg = { "Error" };
@@ -55,6 +60,10 @@ namespace Selenium_CC_CA.Initialisers
 
         // Login URL
         public const string LoginPage = "/users/login";
+
+        //Time Delay Gap 
+        public const int hour = 0;
+        public const int minutes = 1;
 
     }
 }
